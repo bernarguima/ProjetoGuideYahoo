@@ -4,7 +4,7 @@ Criação Banco de dados SQL Server:
 
 Dentro da pasta SQL estão todos os scripts que devem ser executados no banco.
 
-- Passo 1: Execute o script no arquivo 01- Script Create DataBase
+- Passo 1: Execute o script no arquivo 01- Script Create DataBase.txt
 
 - Passo 2: Execute o script no arquivo 02- Script Create Table.txt
 
