@@ -24,6 +24,6 @@ Dados via Serviço:
 
 Dados via Download CSV:
 - Passo 1: Execute o serviço api/GetQuoteCsvYahoo, reponsável por fazer o download do arquivo Csv com as cotações, e gravar os dados no banco de dados.
-- Passo 2: Execute o serviço api/GetQuoteServiceCsv, responsável por recuperar as informações do banco de dados com as informações de cotações e variações, que foram gravas anterioemente pela leitura do arquivo CSV.
+- Passo 2: Execute o serviço api/GetQuoteServiceCsv, responsável por recuperar as informações do banco de dados com as informações de cotações e variações, que foram gravas pela leitura do arquivo CSV.
 
 
