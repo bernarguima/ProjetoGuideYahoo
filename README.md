@@ -12,7 +12,7 @@ Dentro da pasta SQL estão todos os scripts que devem ser executados no banco.
 
 Alteração Instância da conexão com o banco de dados:
 
-Abra o arquivo appSettings.json na raiz do projeto API, o valor localhost\\SQLEXPRESS02, pela instância do seu banco SQL Server
+Abra o arquivo appSettings.json na raiz do projeto API, e altere o valor localhost\\SQLEXPRESS02, pela instância do seu banco SQL Server.
 
 Execução do Projeto:
 
