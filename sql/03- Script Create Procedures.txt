@@ -1,0 +1,69 @@
+USE [Quotes]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+Create procedure [dbo].[SPQuoteAddCsv]
+(      
+    @CDQuote VARCHAR(5),    
+    @VLQuote decimal(18,2),
+    @DTQuote  datetime
+)      
+As       
+Begin       
+    Insert into TBQuoteCsv
+    Values (@CDQuote,@VLQuote,@DTQuote)
+End 
+
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE procedure [dbo].[SPQuoteAddService]
+(      
+    @CDQuote VARCHAR(5),    
+    @VLQuote decimal(18,2),
+    @DTQuote  datetime,
+	@STOpen bit
+)      
+As       
+Begin       
+    Insert into TBQuoteService
+    Values (@CDQuote,@VLQuote,@DTQuote,@STOpen)
+End 
+
+
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+Create procedure [dbo].[SPQuoteGetCSV]
+As       
+Begin       
+    Select top 30 * from TBQuoteCsv order by DTQuote desc
+End 
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create procedure [dbo].[SPQuoteGetService]
+As       
+Begin       
+   select top 30 * from tbquoteService order by DTQuote desc
+End 
+
+

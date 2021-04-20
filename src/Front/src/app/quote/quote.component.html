@@ -1,0 +1,30 @@
+<div class="container">  
+  
+  <mat-card>  
+    <mat-toolbar color="accent">  
+      <div align="center" style="color:white;text-align: right;">  
+        Cotação PETR4
+      </div>    
+    </mat-toolbar>  
+  <br><br>  
+    <mat-card-content>  
+
+            
+  <br><br>  
+        <table class="table" >  
+            <tr ngclass="btn-primary">  
+              <th class="tbl2">Ativo</th>  
+              <th class="tbl2">Cotação</th>  
+              <th class="tbl2">Data</th>   
+            </tr>  
+            <tr *ngFor="let quote of allQuote | async">  
+              <td class="tbl2">{{quote.symbol}}</td>  
+              <td class="tbl2">{{quote.value}}</td>  
+              <td class="tbl2">{{quote.date}}</td> 
+            </tr>  
+    
+          </table>  
+   
+    </mat-card-content>  
+  </mat-card>  
+  </div> 
