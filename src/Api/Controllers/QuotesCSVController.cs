@@ -15,6 +15,7 @@ using System.Net;
 using Api.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Api.Util;
 
 namespace Api.Controllers
 {
@@ -45,7 +46,7 @@ namespace Api.Controllers
             {
                 list = _quote.GetQuoteCsv();
                 list = list.OrderBy(s => s.date).ToList();
-                CalcPercent(list);
+                list = new Utilitario().CalcPercentCsv(list);
                 
             }
             catch (Exception ex)
@@ -85,48 +86,17 @@ namespace Api.Controllers
            
         }
 
-        List<QuoteDataCsv> CalcPercent(List<QuoteDataCsv> list)
-        {
-            List<QuoteDataCsv> listReturn = new List<QuoteDataCsv>();
 
-            double firstDay = list[0].value;
-
-            int cont = 0;
-            double auxVar = 0;
-            foreach (QuoteDataCsv a in list)
-            {
-                if (cont == 0)
-                {
-                    listReturn.Add(a);
-                }
-                else
-                {
-                    a.varFirstDay = (((a.value * 100) / firstDay) - 100);
-                    a.varDaily = (((a.value * 100) / auxVar) - 100);
-
-                    a.varFirstDay = Convert.ToDouble(decimal.Round(Convert.ToDecimal(a.varFirstDay), 2));
-                    a.varDaily = Convert.ToDouble(decimal.Round(Convert.ToDecimal(a.varDaily), 2));
-
-                    listReturn.Add(a);
-                }
-
-                auxVar = a.value;
-                cont++;
-            }
-
-
-            return listReturn;
-        }
-        void DownloadYahooCsv() 
+        void DownloadYahooCsv()
         {
 
-            DateTime dataInicial = DateTime.Now.Date.AddDays(-1);
+            DateTime dataInicial = DateTime.Now.Date;
 
-            double parameterStart = ConvertToTimestamp(dataInicial);
-            double parameterEnd = ConvertToTimestamp(dataInicial.AddDays(-60));
+            double parameterStart = new Utilitario().ConvertToTimestamp(dataInicial);
+            double parameterEnd = new Utilitario().ConvertToTimestamp(dataInicial.AddDays(-60));
 
             string myWebUrlFile = "https://query1.finance.yahoo.com/v7/finance/download/PETR4.SA?period1=" + parameterEnd + "&period2=" + parameterStart + "&interval=1d&events=history&includeAdjustedClose=true";
-           
+
             var FileDic = "CSVFile";
 
             string FilePath = Path.Combine(hostingEnv.ContentRootPath, FileDic);
@@ -145,7 +115,7 @@ namespace Api.Controllers
 
         }
 
-        void CarregaArquivoCsv(string myLocalFilePath) 
+        void CarregaArquivoCsv(string myLocalFilePath)
         {
             int cont = 0;
             using (var reader = new StreamReader(myLocalFilePath))
@@ -187,15 +157,7 @@ namespace Api.Controllers
             }
         }
 
-        Double ConvertToTimestamp(DateTime value)
-        {
-            //create Timespan by subtracting the value provided from
-            //the Unix Epoch
-            TimeSpan span = (value - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
 
-            //return the total seconds (which is a UNIX timestamp)
-            return (double)span.TotalSeconds;
-        }
     }
 }
 

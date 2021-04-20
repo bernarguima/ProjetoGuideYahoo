@@ -11,6 +11,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using Api.Interface;
 using Microsoft.AspNetCore.Http;
+using Api.Util;
 
 namespace Api.Controllers
 {
@@ -38,7 +39,7 @@ namespace Api.Controllers
             {
                 list = _quote.GetQuoteService();
                 list = list.OrderBy(s => s.date).ToList();
-                CalcPercent(list);
+                list = new Utilitario().CalcPercent(list);
                 
             }
             catch (Exception ex)
@@ -49,40 +50,7 @@ namespace Api.Controllers
             return list;
         }
 
-        List<QuoteData> CalcPercent(List<QuoteData> list) 
-        {
-            List<QuoteData> listReturn = new List<QuoteData>();
-
-            double firstDay = list[0].value;
-
-            int cont = 0;
-            double auxVar = 0;
-            foreach (QuoteData a in list)
-            {
-                if (cont == 0)
-                {
-                    listReturn.Add(a);
-                }
-                else
-                {
-                    a.varFirstDay = (((a.value * 100) / firstDay) - 100);
-                    a.varDaily = (((a.value * 100) / auxVar) - 100);
-
-                    a.varFirstDay = Convert.ToDouble(decimal.Round(Convert.ToDecimal(a.varFirstDay), 2));
-                    a.varDaily = Convert.ToDouble(decimal.Round(Convert.ToDecimal(a.varDaily), 2));
-
-                    listReturn.Add(a);
-                }
-
-                auxVar = a.value;
-                cont++;
-            }
-
-
-            return listReturn;
-        }
-
-
+  
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -102,10 +70,10 @@ namespace Api.Controllers
 
                 if (list.Count == 0)
                 {
-                    DateTime dataInicial = DateTime.Now.Date.AddDays(-1);
+                    DateTime dataInicial = DateTime.Now.Date;
 
-                    double parameterStart = ConvertToTimestamp(dataInicial);
-                    double parameterEnd = ConvertToTimestamp(dataInicial.AddDays(-60));
+                    double parameterStart = new Utilitario().ConvertToTimestamp(dataInicial);
+                    double parameterEnd = new Utilitario().ConvertToTimestamp(dataInicial.AddDays(-60));
 
 
                     //List<QuoteData> list = _quote.GetQuoteService();
@@ -132,13 +100,13 @@ namespace Api.Controllers
 
                         var respostaQuote = respostaResult.chart.result.Select(x => x.indicators.quote);
 
-                        GetValuesTimestemp(respostaTimestemp);
+                        new Utilitario().GetValuesTimestemp(respostaTimestemp);
 
-                        GetValuesQuote(respostaQuote);
+                        new Utilitario().GetValuesQuote(respostaQuote);
 
                         TimestamOpenValues finalResult = new TimestamOpenValues();
-                        finalResult.listOpen = GetValuesQuote(respostaQuote);
-                        finalResult.listTimestem = GetValuesTimestemp(respostaTimestemp);
+                        finalResult.listOpen = new Utilitario().GetValuesQuote(respostaQuote);
+                        finalResult.listTimestem = new Utilitario().GetValuesTimestemp(respostaTimestemp);
 
 
                         DateTime aux = DateTime.Now;
@@ -148,7 +116,7 @@ namespace Api.Controllers
 
                             int valueTime = finalResult.listTimestem[i];
 
-                            DateTime date = TimestamToDate(valueTime);
+                            DateTime date = new Utilitario().TimestamToDate(valueTime);
                             try
                             {
                                 QuoteData quotedata = new QuoteData();
@@ -182,48 +150,7 @@ namespace Api.Controllers
             }
         }
 
-        List<double?> GetValuesQuote(IEnumerable<List<Quote>> list) 
-        {
-            List<double?> lista = new List<double?>();
-            
-            foreach (List<Quote> objQoute in list)
-            {
-                lista = objQoute[0].open;
-            }
-            return lista;
-        }
-
-        List<int> GetValuesTimestemp(IEnumerable<List<int>> list)
-        {
-            List<int> lista = new List<int>();
-
-            foreach (List<int> objQoute in list)
-            {
-                lista = objQoute;
-            }
-            return lista;
-        }
-
-        DateTime TimestamToDate(int ValueTime )
-            {
-
-            DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
-
-            dateTime = dateTime.AddSeconds(ValueTime).AddHours(-3);
-
-            return dateTime;
-
-        }
-
-        Double ConvertToTimestamp(DateTime value)
-        {
-            //create Timespan by subtracting the value provided from
-            //the Unix Epoch
-            TimeSpan span = (value - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
-
-            //return the total seconds (which is a UNIX timestamp)
-            return (double)span.TotalSeconds;
-        }
+      
 
 
 

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';  
-import { HttpHeaders } from '@angular/common/http';  
-import { Observable, throwError } from 'rxjs';  
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Quote } from './quote'; 
-import { catchError, map } from "rxjs/operators";
 
-var httpOptions = {headers: new HttpHeaders({"Content-Type": "application/json"})};
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,29 +17,20 @@ export class QuoteService {
   constructor(private http: HttpClient) { }
 
   getAllQuotes(): Observable<Quote[]> { 
-    const myObservable = this.http.get<Quote[]>(this.url).pipe(catchError(this.serviceError));
-
-    const myObserver = {
-      next: x => console.log('Observer got a next value: ' + x),
-      error: err => console.error('Observer got an error: ' + err),
-      complete: () => console.log('Observer got a complete notification'),
-    };
+    const myObservable = this.http.get<Quote[]>(this.url);
     
-    return myObservable;
+    return this.http.get<Quote[]>(this.url);
   }  
 
-  protected serviceError(error: Response | any) {
-    let errMsg: string;
-
-    if (error instanceof Response) {
-
-        errMsg = `${error.status} - ${error.statusText || ''}`;
+  error(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = error.error.message;
+    } else {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    else {
-        errMsg = error.message ? error.message : error.toString();
-    }
+    console.log(errorMessage);
+    return throwError(errorMessage);
+  }
+}
 
-    console.error(errMsg);
-    return throwError(errMsg);
-}
-}
