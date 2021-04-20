@@ -26,13 +26,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("api/GetQuoteService")]
-        public async Task<List<QuoteData>> GetQuoteService()
+        public async Task<IActionResult> GetQuoteService()
         {
             List<QuoteData> list = new List<QuoteData>();
             try
@@ -47,12 +46,19 @@ namespace Api.Controllers
                 
             }
 
-            return list;
+            if (list.Count == 0)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return Ok(list);
+            }
         }
 
   
         [HttpGet]
-        [ProducesDefaultResponseType]
+        
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
