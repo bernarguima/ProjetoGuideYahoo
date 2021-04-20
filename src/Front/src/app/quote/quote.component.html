@@ -17,7 +17,7 @@
               <th class="tbl2">Cotação</th>  
               <th class="tbl2">Data</th>   
             </tr>  
-            <tr *ngFor="let quote of allQuote | async">  
+            <tr *ngFor="let quote of allQuote">  
               <td class="tbl2">{{quote.symbol}}</td>  
               <td class="tbl2">{{quote.value}}</td>  
               <td class="tbl2">{{quote.date}}</td> 
