@@ -144,9 +144,6 @@ namespace Api.Controllers
                         }
                     }
                 
-                
-
-
                 return Ok("Processamento Concluído");
             }
 
